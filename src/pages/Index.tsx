@@ -1,13 +1,60 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import {
+  FluentProvider,
+  webLightTheme,
+  makeStyles,
+  tokens,
+  Title1,
+  Text,
+  shorthands,
+} from "@fluentui/react-components";
+import { SearchableDropdown } from "@/components/SearchableDropdown";
+
+const useStyles = makeStyles({
+  page: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+    ...shorthands.padding("40px", "20px"),
+    backgroundColor: tokens.colorNeutralBackground2,
+  },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+    width: "100%",
+    maxWidth: "520px",
+    ...shorthands.padding("32px"),
+    backgroundColor: tokens.colorNeutralBackground1,
+    ...shorthands.borderRadius(tokens.borderRadiusXLarge),
+    boxShadow: tokens.shadow8,
+  },
+  header: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    marginBottom: "8px",
+  },
+});
 
 const Index = () => {
+  const styles = useStyles();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <FluentProvider theme={webLightTheme}>
+      <div className={styles.page}>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <Title1>Entity Picker</Title1>
+            <Text size={300} style={{ color: tokens.colorNeutralForeground3 }}>
+              Search and select from 1,000 entities or 1,000 entity groups
+            </Text>
+          </div>
+          <SearchableDropdown />
+        </div>
       </div>
-    </div>
+    </FluentProvider>
   );
 };
 
