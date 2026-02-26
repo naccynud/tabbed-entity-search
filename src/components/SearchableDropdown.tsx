@@ -12,6 +12,7 @@ import {
   PeopleRegular,
   PeopleTeamRegular,
   DismissRegular,
+  ChevronDownRegular,
 } from "@fluentui/react-icons";
 import { entities, entityGroups, type Entity, type EntityGroup } from "@/data/mockEntities";
 
@@ -276,19 +277,23 @@ export function SearchableDropdown() {
             aria-label="Search"
             autoComplete="off"
           />
-          {(selectedEntity || selectedGroup) && !search && (
+          {(search || selectedEntity || selectedGroup) ? (
             <button
               className={styles.clearButton}
               onClick={(e) => {
                 e.stopPropagation();
+                setSearch("");
                 setSelectedEntity(null);
                 setSelectedGroup(null);
+                triggerRef.current?.focus();
               }}
-              aria-label="Clear selection"
+              aria-label="Clear"
               type="button"
             >
               <DismissRegular fontSize={16} />
             </button>
+          ) : (
+            <ChevronDownRegular fontSize={16} style={{ color: tokens.colorNeutralForeground3, flexShrink: 0 }} />
           )}
         </div>
 
