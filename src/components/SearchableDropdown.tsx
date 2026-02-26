@@ -6,7 +6,6 @@ import {
   TabList,
   Tab,
   Text,
-  Badge,
   mergeClasses,
 } from "@fluentui/react-components";
 import {
@@ -135,17 +134,6 @@ const useStyles = makeStyles({
     fontSize: tokens.fontSizeBase200,
     color: tokens.colorNeutralForeground3,
   },
-  selectedInfo: {
-    display: "flex",
-    alignItems: "center",
-    ...shorthands.gap("8px"),
-    ...shorthands.padding("8px", "12px"),
-    backgroundColor: tokens.colorNeutralBackground1,
-    ...shorthands.borderRadius(tokens.borderRadiusMedium),
-    ...shorthands.borderWidth("1px"),
-    ...shorthands.borderStyle("solid"),
-    ...shorthands.borderColor(tokens.colorNeutralStroke1),
-  },
 });
 
 type TabValue = "entities" | "groups";
@@ -161,7 +149,7 @@ export function SearchableDropdown() {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -254,12 +242,16 @@ export function SearchableDropdown() {
     }
   };
 
-  const openDropdown = () => {
-    setIsOpen(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
+  const selectedLabel = selectedEntity?.name || selectedGroup?.name || "";
+
+  const handleTriggerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    if (!isOpen) setIsOpen(true);
   };
 
-  const selectedLabel = selectedEntity?.name || selectedGroup?.name || null;
+  const handleTriggerFocus = () => {
+    setIsOpen(true);
+  };
 
   return (
     <div className={styles.root}>
@@ -268,20 +260,23 @@ export function SearchableDropdown() {
       </label>
 
       <div className={styles.dropdownWrapper} ref={wrapperRef}>
-        <button
-          className={styles.triggerButton}
-          onClick={openDropdown}
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-          aria-labelledby="dropdown-label"
-          type="button"
-        >
-          {selectedLabel ? (
-            <span>{selectedLabel}</span>
-          ) : (
-            <span className={styles.triggerPlaceholder}>Search entities or groups…</span>
-          )}
-          {selectedLabel && (
+        <div className={styles.triggerButton} onClick={() => triggerRef.current?.focus()}>
+          <input
+            ref={triggerRef}
+            className={styles.searchInput}
+            style={{ borderBottom: "none", padding: "0" }}
+            placeholder="Search entities or groups…"
+            value={search || (isOpen ? "" : selectedLabel)}
+            onChange={handleTriggerChange}
+            onFocus={handleTriggerFocus}
+            onKeyDown={handleKeyDown}
+            aria-haspopup="listbox"
+            aria-expanded={isOpen}
+            aria-labelledby="dropdown-label"
+            aria-label="Search"
+            autoComplete="off"
+          />
+          {(selectedEntity || selectedGroup) && !search && (
             <button
               className={styles.clearButton}
               onClick={(e) => {
@@ -295,24 +290,14 @@ export function SearchableDropdown() {
               <DismissRegular fontSize={16} />
             </button>
           )}
-        </button>
+        </div>
 
         {isOpen && (
           <div
             className={styles.customDropdown}
             role="dialog"
             aria-label="Search and select"
-            onKeyDown={handleKeyDown}
           >
-            <input
-              ref={inputRef}
-              className={styles.searchInput}
-              placeholder={activeTab === "entities" ? "Search entities by name or type…" : "Search groups by name or category…"}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search"
-              autoComplete="off"
-            />
 
             <TabList
               selectedValue={activeTab}
@@ -380,19 +365,6 @@ export function SearchableDropdown() {
         )}
       </div>
 
-      {(selectedEntity || selectedGroup) && (
-        <div className={styles.selectedInfo}>
-          <Badge appearance="filled" color={selectedEntity ? "brand" : "success"} size="small">
-            {selectedEntity ? "Entity" : "Group"}
-          </Badge>
-          <Text weight="semibold">{selectedEntity?.name || selectedGroup?.name}</Text>
-          <Text size={200} style={{ color: tokens.colorNeutralForeground3 }}>
-            {selectedEntity
-              ? `${selectedEntity.type} · ${selectedEntity.id}`
-              : `${selectedGroup?.category} · ${selectedGroup?.memberCount} members`}
-          </Text>
-        </div>
-      )}
     </div>
   );
 }
