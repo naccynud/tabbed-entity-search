@@ -310,8 +310,8 @@ export function SearchableDropdown() {
               size="small"
               style={{ padding: "4px 8px 0" }}
             >
-              <Tab value="entities" icon={<PeopleRegular />}>Entities</Tab>
-              <Tab value="groups" icon={<PeopleTeamRegular />}>Groups</Tab>
+              <Tab value="entities" icon={<PeopleRegular />} tabIndex={-1}>Entities</Tab>
+              <Tab value="groups" icon={<PeopleTeamRegular />} tabIndex={-1}>Groups</Tab>
             </TabList>
 
             <div
