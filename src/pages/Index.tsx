@@ -7,34 +7,28 @@ import {
   Text,
   shorthands,
 } from "@fluentui/react-components";
-import { SearchableDropdown } from "@/components/SearchableDropdown";
+import { SelectionToolbar } from "@/components/SelectionToolbar";
 
 const useStyles = makeStyles({
   page: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
     minHeight: "100vh",
     ...shorthands.padding("40px", "20px"),
     backgroundColor: tokens.colorNeutralBackground2,
   },
-  card: {
+  container: {
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    ...shorthands.gap("16px"),
     width: "100%",
-    maxWidth: "520px",
-    ...shorthands.padding("32px"),
-    backgroundColor: tokens.colorNeutralBackground1,
-    ...shorthands.borderRadius(tokens.borderRadiusXLarge),
-    boxShadow: tokens.shadow8,
+    maxWidth: "900px",
   },
   header: {
     display: "flex",
     flexDirection: "column",
-    gap: "4px",
-    marginBottom: "8px",
+    ...shorthands.gap("4px"),
   },
 });
 
@@ -44,14 +38,14 @@ const Index = () => {
   return (
     <FluentProvider theme={webLightTheme}>
       <div className={styles.page}>
-        <div className={styles.card}>
+        <div className={styles.container}>
           <div className={styles.header}>
-            <Title1>Entity Picker</Title1>
+            <Title1>Tax Workbench</Title1>
             <Text size={300} style={{ color: tokens.colorNeutralForeground3 }}>
-              Search and select from 1,000 entities or 1,000 entity groups
+              Select context parameters for your analysis
             </Text>
           </div>
-          <SearchableDropdown />
+          <SelectionToolbar />
         </div>
       </div>
     </FluentProvider>
