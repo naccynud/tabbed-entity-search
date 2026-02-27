@@ -3,13 +3,18 @@ import {
   makeStyles,
   shorthands,
   tokens,
-  Text,
   Tooltip,
-  mergeClasses,
+  Text,
 } from "@fluentui/react-components";
 import {
-  ChevronUpRegular,
-  ChevronDownRegular,
+  ChevronLeftRegular,
+  ChevronRightRegular,
+  CalendarRegular,
+  GavelRegular,
+  BuildingRegular,
+  GlobeRegular,
+  CurrencyDollarEuroRegular,
+  BookRegular,
   MoreHorizontalRegular,
 } from "@fluentui/react-icons";
 import { TabbedSearchDropdown } from "./TabbedSearchDropdown";
@@ -30,40 +35,87 @@ import {
 const useStyles = makeStyles({
   toolbar: {
     display: "flex",
-    flexDirection: "column",
+    alignItems: "center",
     ...shorthands.gap("0px"),
     backgroundColor: tokens.colorNeutralBackground1,
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
     ...shorthands.borderWidth("1px"),
     ...shorthands.borderStyle("solid"),
     ...shorthands.borderColor(tokens.colorNeutralStroke2),
-    ...shorthands.overflow("hidden"),
+    position: "relative",
+    ...shorthands.overflow("visible"),
   },
-  toolbarHeader: {
+  toggleButton: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    ...shorthands.padding("8px", "12px"),
+    justifyContent: "center",
+    ...shorthands.padding("0px", "6px"),
     backgroundColor: tokens.colorNeutralBackground3,
+    ...shorthands.borderWidth("0"),
+    borderRightWidth: "1px",
+    borderRightStyle: "solid",
+    borderRightColor: tokens.colorNeutralStroke2,
     cursor: "pointer",
+    color: tokens.colorNeutralForeground3,
+    alignSelf: "stretch",
+    minWidth: "28px",
+    flexShrink: 0,
     ":hover": {
       backgroundColor: tokens.colorNeutralBackground3Hover,
     },
   },
-  headerLeft: {
+  fieldsRow: {
     display: "flex",
     alignItems: "center",
-    ...shorthands.gap("8px"),
+    ...shorthands.gap("6px"),
+    ...shorthands.padding("6px", "10px"),
+    flexWrap: "nowrap",
+    flexGrow: 1,
+    minWidth: 0,
   },
-  headerLabel: {
-    fontWeight: tokens.fontWeightSemibold,
-    fontSize: tokens.fontSizeBase200,
-    color: tokens.colorNeutralForeground1,
-  },
-  summaryChips: {
+  fieldWrapper: {
     display: "flex",
-    flexWrap: "wrap",
+    alignItems: "center",
     ...shorthands.gap("4px"),
+    minWidth: "120px",
+    flexShrink: 1,
+    flexGrow: 1,
+    maxWidth: "220px",
+  },
+  fieldIcon: {
+    color: tokens.colorNeutralForeground3,
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+  },
+  overflowButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    ...shorthands.padding("4px", "6px"),
+    ...shorthands.borderWidth("1px"),
+    ...shorthands.borderStyle("solid"),
+    ...shorthands.borderColor(tokens.colorNeutralStroke1),
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+    backgroundColor: tokens.colorNeutralBackground1,
+    cursor: "pointer",
+    color: tokens.colorNeutralForeground2,
+    flexShrink: 0,
+    minHeight: "30px",
+    ":hover": {
+      backgroundColor: tokens.colorNeutralBackground1Hover,
+    },
+  },
+  overflowActive: {
+    backgroundColor: tokens.colorNeutralBackground1Selected,
+    ...shorthands.borderColor(tokens.colorBrandStroke1),
+  },
+  collapsedChips: {
+    display: "flex",
+    alignItems: "center",
+    ...shorthands.gap("4px"),
+    ...shorthands.padding("6px", "10px"),
+    flexGrow: 1,
   },
   chip: {
     display: "inline-flex",
@@ -73,69 +125,15 @@ const useStyles = makeStyles({
     backgroundColor: tokens.colorNeutralBackground4,
     fontSize: tokens.fontSizeBase100,
     color: tokens.colorNeutralForeground2,
-    maxWidth: "140px",
+    maxWidth: "120px",
     overflowX: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
   },
-  fieldsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    ...shorthands.gap("8px"),
-    ...shorthands.padding("10px", "12px"),
-  },
-  overflowRow: {
-    display: "flex",
-    ...shorthands.gap("8px"),
-    ...shorthands.padding("0px", "12px", "10px"),
-  },
-  fieldWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    ...shorthands.gap("3px"),
-    minWidth: "0",
-  },
-  fieldLabel: {
-    fontSize: tokens.fontSizeBase100,
-    fontWeight: tokens.fontWeightSemibold,
-    color: tokens.colorNeutralForeground3,
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-  },
-  overflowButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    ...shorthands.padding("4px", "8px"),
-    ...shorthands.borderWidth("1px"),
-    ...shorthands.borderStyle("solid"),
-    ...shorthands.borderColor(tokens.colorNeutralStroke1),
-    ...shorthands.borderRadius(tokens.borderRadiusMedium),
-    backgroundColor: tokens.colorNeutralBackground1,
-    cursor: "pointer",
-    minHeight: "30px",
-    minWidth: "36px",
-    color: tokens.colorNeutralForeground2,
-    ":hover": {
-      backgroundColor: tokens.colorNeutralBackground1Hover,
-    },
-  },
-  overflowPanel: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    ...shorthands.gap("8px"),
-    ...shorthands.padding("0px", "12px", "10px"),
-    borderTopWidth: "1px",
-    borderTopStyle: "solid",
-    borderTopColor: tokens.colorNeutralStroke2,
-    paddingTop: "10px",
-  },
-  collapsed: {
-    display: "none",
-  },
-  chevronIcon: {
-    color: tokens.colorNeutralForeground3,
-    flexShrink: 0,
+  noSelections: {
+    color: tokens.colorNeutralForeground4,
+    fontSize: tokens.fontSizeBase200,
+    ...shorthands.padding("6px", "10px"),
   },
   tooltipContent: {
     display: "flex",
@@ -149,7 +147,6 @@ export function SelectionToolbar() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [showOverflow, setShowOverflow] = useState(false);
 
-  // Selection state
   const [selectedPeriod, setSelectedPeriod] = useState<SimpleItem | null>(null);
   const [selectedCase, setSelectedCase] = useState<TabbedItem | null>(null);
   const [selectedEntity, setSelectedEntity] = useState<TabbedItem | null>(null);
@@ -158,7 +155,7 @@ export function SelectionToolbar() {
   const [selectedLedger, setSelectedLedger] = useState<SimpleItem | null>(null);
 
   const summaryItems = [
-    selectedPeriod && `${selectedPeriod.code}`,
+    selectedPeriod && selectedPeriod.code,
     selectedCase && selectedCase.name,
     selectedEntity && selectedEntity.name,
     selectedJurisdiction && selectedJurisdiction.name,
@@ -175,64 +172,54 @@ export function SelectionToolbar() {
     `Ledger: ${selectedLedger ? `${selectedLedger.code} ${selectedLedger.description}` : "—"}`,
   ];
 
-  const headerContent = (
-    <div className={styles.toolbarHeader} onClick={() => setIsExpanded(!isExpanded)}>
-      <div className={styles.headerLeft}>
-        <Text className={styles.headerLabel}>Selections</Text>
-        {!isExpanded && summaryItems.length > 0 && (
-          <div className={styles.summaryChips}>
-            {summaryItems.map((label, i) => (
-              <span key={i} className={styles.chip}>{label}</span>
-            ))}
-          </div>
-        )}
-        {!isExpanded && summaryItems.length === 0 && (
-          <Text size={200} style={{ color: tokens.colorNeutralForeground4 }}>No selections</Text>
-        )}
-      </div>
-      {isExpanded
-        ? <ChevronUpRegular fontSize={16} className={styles.chevronIcon} />
-        : <ChevronDownRegular fontSize={16} className={styles.chevronIcon} />
-      }
+  const collapsedContent = (
+    <div className={styles.collapsedChips}>
+      {summaryItems.length > 0 ? (
+        summaryItems.map((label, i) => (
+          <span key={i} className={styles.chip}>{label}</span>
+        ))
+      ) : (
+        <Text className={styles.noSelections}>No selections</Text>
+      )}
     </div>
   );
 
   return (
     <div className={styles.toolbar}>
-      {!isExpanded ? (
-        <Tooltip
-          content={
-            <div className={styles.tooltipContent}>
-              {tooltipLines.map((line, i) => (
-                <Text key={i} size={200}>{line}</Text>
-              ))}
-            </div>
-          }
-          relationship="description"
-          positioning="below"
-        >
-          {headerContent}
-        </Tooltip>
-      ) : (
-        headerContent
-      )}
+      {/* Left toggle */}
+      <button
+        className={styles.toggleButton}
+        onClick={() => setIsExpanded(!isExpanded)}
+        aria-label={isExpanded ? "Collapse toolbar" : "Expand toolbar"}
+        type="button"
+      >
+        {isExpanded
+          ? <ChevronLeftRegular fontSize={16} />
+          : <ChevronRightRegular fontSize={16} />
+        }
+      </button>
 
-      <div className={mergeClasses(!isExpanded && styles.collapsed)}>
-        {/* Primary fields: Period, Case, Entity, Jurisdiction */}
-        <div className={styles.fieldsGrid}>
+      {isExpanded ? (
+        <div className={styles.fieldsRow}>
+          {/* Period */}
           <div className={styles.fieldWrapper}>
-            <Text className={styles.fieldLabel}>Period</Text>
+            <Tooltip content="Period" relationship="label">
+              <span className={styles.fieldIcon}><CalendarRegular fontSize={16} /></span>
+            </Tooltip>
             <SimpleSearchDropdown
               items={periodItems}
-              placeholder="Tax year…"
+              placeholder="Period…"
               selectedItem={selectedPeriod}
               onSelect={setSelectedPeriod}
               onClear={() => setSelectedPeriod(null)}
             />
           </div>
 
+          {/* Case */}
           <div className={styles.fieldWrapper}>
-            <Text className={styles.fieldLabel}>Case</Text>
+            <Tooltip content="Case" relationship="label">
+              <span className={styles.fieldIcon}><GavelRegular fontSize={16} /></span>
+            </Tooltip>
             <TabbedSearchDropdown
               tabs={[
                 { value: "cases", label: "Cases", icon: "entity", items: caseItems },
@@ -245,8 +232,11 @@ export function SelectionToolbar() {
             />
           </div>
 
+          {/* Entity */}
           <div className={styles.fieldWrapper}>
-            <Text className={styles.fieldLabel}>Entity</Text>
+            <Tooltip content="Entity" relationship="label">
+              <span className={styles.fieldIcon}><BuildingRegular fontSize={16} /></span>
+            </Tooltip>
             <TabbedSearchDropdown
               tabs={[
                 { value: "entities", label: "Entities", icon: "entity", items: entityItems },
@@ -259,8 +249,11 @@ export function SelectionToolbar() {
             />
           </div>
 
+          {/* Jurisdiction */}
           <div className={styles.fieldWrapper}>
-            <Text className={styles.fieldLabel}>Jurisdiction</Text>
+            <Tooltip content="Jurisdiction" relationship="label">
+              <span className={styles.fieldIcon}><GlobeRegular fontSize={16} /></span>
+            </Tooltip>
             <TabbedSearchDropdown
               tabs={[
                 { value: "jurisdictions", label: "Jurisdictions", icon: "entity", items: allJurisdictionItems },
@@ -272,50 +265,63 @@ export function SelectionToolbar() {
               onClear={() => setSelectedJurisdiction(null)}
             />
           </div>
-        </div>
 
-        {/* Overflow toggle */}
-        <div className={styles.overflowRow}>
+          {/* Overflow toggle */}
           <button
-            className={styles.overflowButton}
+            className={`${styles.overflowButton} ${showOverflow ? styles.overflowActive : ""}`}
             onClick={() => setShowOverflow(!showOverflow)}
             aria-label="More fields"
             type="button"
           >
             <MoreHorizontalRegular fontSize={16} />
-            <Text size={200} style={{ marginLeft: "4px" }}>
-              {showOverflow ? "Less" : "More"}
-            </Text>
           </button>
+
+          {/* Overflow fields inline */}
+          {showOverflow && (
+            <>
+              <div className={styles.fieldWrapper}>
+                <Tooltip content="Currency" relationship="label">
+                  <span className={styles.fieldIcon}><CurrencyDollarEuroRegular fontSize={16} /></span>
+                </Tooltip>
+                <SimpleSearchDropdown
+                  items={currencyItems}
+                  placeholder="Currency…"
+                  selectedItem={selectedCurrency}
+                  onSelect={setSelectedCurrency}
+                  onClear={() => setSelectedCurrency(null)}
+                />
+              </div>
+
+              <div className={styles.fieldWrapper}>
+                <Tooltip content="Ledger" relationship="label">
+                  <span className={styles.fieldIcon}><BookRegular fontSize={16} /></span>
+                </Tooltip>
+                <SimpleSearchDropdown
+                  items={ledgerItems}
+                  placeholder="Ledger…"
+                  selectedItem={selectedLedger}
+                  onSelect={setSelectedLedger}
+                  onClear={() => setSelectedLedger(null)}
+                />
+              </div>
+            </>
+          )}
         </div>
-
-        {/* Overflow fields: Currency, Ledger */}
-        {showOverflow && (
-          <div className={styles.overflowPanel}>
-            <div className={styles.fieldWrapper}>
-              <Text className={styles.fieldLabel}>Currency</Text>
-              <SimpleSearchDropdown
-                items={currencyItems}
-                placeholder="Currency…"
-                selectedItem={selectedCurrency}
-                onSelect={setSelectedCurrency}
-                onClear={() => setSelectedCurrency(null)}
-              />
+      ) : (
+        <Tooltip
+          content={
+            <div className={styles.tooltipContent}>
+              {tooltipLines.map((line, i) => (
+                <Text key={i} size={200}>{line}</Text>
+              ))}
             </div>
-
-            <div className={styles.fieldWrapper}>
-              <Text className={styles.fieldLabel}>Ledger</Text>
-              <SimpleSearchDropdown
-                items={ledgerItems}
-                placeholder="Ledger…"
-                selectedItem={selectedLedger}
-                onSelect={setSelectedLedger}
-                onClear={() => setSelectedLedger(null)}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+          }
+          relationship="description"
+          positioning="below"
+        >
+          {collapsedContent}
+        </Tooltip>
+      )}
     </div>
   );
 }
